@@ -1,0 +1,10 @@
+# contract
+.tsimp
+build
+
+# frontend
+.vercel
+.next
+
+# node
+node_modules
