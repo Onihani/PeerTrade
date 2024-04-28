@@ -17,6 +17,7 @@ import { P2P_CONTRACT } from "@/common/constants";
 
 export default function Dashboard() {
   // state
+  const [orders, setOrders] = useState([]);
   const [balances, setBalances] = useState({});
 
   // hooks
@@ -41,10 +42,18 @@ export default function Dashboard() {
         .catch((err) => {
           console.log({ err });
         });
+      wallet
+        .viewMethod({
+          contractId: P2P_CONTRACT,
+          method: "getOrders",
+          args: { type: "buy" },
+        })
+        .then((orders) => setOrders(orders))
+        .catch((err) => console.log({ err }));
     }
   }, [wallet, signedAccountId]);
 
-  console.log({ balances });
+  console.log({ orders });
 
   return (
     <div className="container mx-auto">
@@ -80,8 +89,10 @@ export default function Dashboard() {
             <div className="mt-28">
               <h2 className="text-3xl font-bold tracking-tight">Orders</h2>
               {/*grid layout 4 on xl, 3 on lg, 2md and 1 on default */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 mt-6">
-                <OrderCard />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                {orders.map((order) => (
+                  <OrderCard key={order.id} order={order} />
+                ))}
               </div>
             </div>
           </div>
